@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net5</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+        <Day></Day>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Day)' != ''">
+        <AssemblyName>$(AssemblyName)-day$(Day)</AssemblyName>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="conlib" Version="0.2.2" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.8.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="input.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <Compile Remove="day*.cs" />
+        <None Include="day*.cs" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Day)' != ''">
+        <Compile Include="day$(Day).cs" />
+        <None Remove="day$(Day).cs" />
+        <Compile Remove="aoc20.cs" />
+    </ItemGroup>
+
+</Project>
