@@ -86,7 +86,7 @@ void CompileAndRun(string dayFile, string dayNum)
     
     foreach (var attempt in Enumerable.Range(0, 10))
     {
-        if(DoTask($"Read Day {dayNum} source{(attempt>0?$" (retry {attempt}":"")}", () =>
+        if(DoTask($"Read Day {dayNum} source{(attempt>0?$" (retry {attempt}":"")})", () =>
         {
             var src = File.ReadAllText(dayFile)
                 .Replace("using static System.Console", "using static ConLib.PrettyConsole");
@@ -96,9 +96,11 @@ void CompileAndRun(string dayFile, string dayNum)
                 assembly
             ), typeof(Globals));
             return Task.CompletedTask;
-        })) break;
+        }, continueOnFail: true)) break;
         DoTask("Waiting 1 second", () => Task.Delay(TimeSpan.FromSeconds(1)));
     }
+
+    if (script is null) throw new Exception("Could not load script file");
 
     DoTask($"Compile Day {dayNum}", () => Task.FromResult(script.Compile(ct)));
     
