@@ -17,7 +17,7 @@ var watch = args.Contains("-w") || args.Contains("--watch");
 var assembly = Assembly.GetExecutingAssembly();
 var tokens = new Dictionary<string, CancellationTokenSource>();
 var runTimeout = TimeSpan.FromSeconds(30);
-FileSystemWatcher watcher = null; 
+FileSystemWatcher? watcher = null; 
 
 WriteLine($"{"Advent of Code"} {2020}\n");
 
@@ -102,12 +102,12 @@ void CompileAndRun(string dayFile, string dayNum)
 
     if (script is null) throw new Exception("Could not load script file");
 
-    DoTask($"Compile Day {dayNum}", () => Task.FromResult(script.Compile(ct)));
+    if(!DoTask($"Compile Day {dayNum}", () => Task.FromResult(script.Compile(ct)), watch)) return;
     
     DoChore($"Run Day {dayNum}", () =>
     {
         if (script.RunAsync(new Globals(new []{ Path.Join(sourceRoot.FullName, "inputs", $"day{dayNum}.txt")}), _ => true, ct).Result.Exception is { } x) throw x;
-    });
+    }, true);
 
     if (ct.IsCancellationRequested)
     {
