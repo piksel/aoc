@@ -66,6 +66,7 @@ foreach (var dayFile in sourceRoot.EnumerateFiles(sourcePattern))
     CompileAndRun(dayFile.FullName, dayNum);
 }
 
+// ReSharper disable once LoopVariableIsNeverChangedInsideLoop
 while (watcher is {})
 {
     var wcr = watcher.WaitForChanged(WatcherChangeTypes.Changed);
@@ -86,7 +87,7 @@ void CompileAndRun(string dayFile, string dayNum)
     
     foreach (var attempt in Enumerable.Range(0, 10))
     {
-        if(DoTask($"Read Day {dayNum} source{(attempt>0?$" (retry {attempt}":"")})", () =>
+        if(DoTask($"Read Day {dayNum} source{(attempt>0?$" (retry {attempt})":"")}", () =>
         {
             var src = File.ReadAllText(dayFile)
                 .Replace("using static System.Console", "using static ConLib.PrettyConsole");
