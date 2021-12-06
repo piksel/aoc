@@ -1,8 +1,11 @@
-use std::env;
+use std::{env};
 use simple_error::bail;
 
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
+pub type DayResultsStr = (Option<String>, Option<String>);
+pub type DayResults = (Option<i64>, Option<i64>);
 
+#[derive(Debug)]
 pub struct Opts {
     pub input_suffix: String,
     pub verbose: bool,
@@ -27,7 +30,7 @@ pub fn parse_args() -> Result<Opts> {
     return Ok(Opts{input_suffix, verbose, gold})
 }
 
-pub fn print_results(results: Result<(Option<i64>, Option<i64>)>) {
+pub fn print_str_results(results: Result<DayResultsStr>) {
     match results {
         Err(e) => println!("\x1b[91mError:\x1b[0m {}", e),
         Ok((s, g)) => {
@@ -35,4 +38,16 @@ pub fn print_results(results: Result<(Option<i64>, Option<i64>)>) {
             if let Some(g) = g { println!("🥇: \x1b[92m{}\x1b[0m", g); }
         }
     }
+}
+
+pub fn print_results(results: Result<DayResults>) {
+    fn fmt_num(v: i64) -> Option<String> { Some(format!("{}", v)) }
+    print_str_results(
+        results.and_then(|(silver, gold)| 
+            Ok((
+                silver.and_then(fmt_num), 
+                gold.and_then(fmt_num) 
+            ))
+        )
+    )
 }

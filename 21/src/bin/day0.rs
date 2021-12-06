@@ -1,6 +1,6 @@
 use std::io::{self, prelude::*};
 use std::fs::File;
-use aoc21::{Result, parse_args, print_results};
+use aoc21::{Result, DayResults, parse_args, print_results};
 
 const DAY_NUM: i32 = 0;
 
@@ -9,7 +9,7 @@ fn main() {
     print_results(run());
 }
 
-fn run() -> Result<(Option<i64>, Option<i64>)> {
+fn run() -> Result<DayResults> {
     let opts = parse_args()?;
     let file = format!("inputs/day{}-{}.txt", DAY_NUM, opts.input_suffix);
     println!("Using input \x1b[36m{}\x1b[0m...", file);
